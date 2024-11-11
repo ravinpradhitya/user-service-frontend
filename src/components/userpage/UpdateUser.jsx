@@ -5,8 +5,6 @@ import UserService from '../service/UserService';
 function UpdateUser() {
   const navigate = useNavigate();
   const { userId } = useParams();
-
-
   const [userData, setUserData] = useState({
     name: '',
     email: '',
@@ -15,14 +13,14 @@ function UpdateUser() {
   });
 
   useEffect(() => {
-    fetchUserDataById(userId); // Pass the userId to fetchUserDataById
-  }, [userId]); //wheen ever there is a chane in userId, run this
+    fetchUserDataById(userId);
+  }, [userId]); 
 
   const fetchUserDataById = async (userId) => {
     try {
       const token = localStorage.getItem('token');
       const response = await UserService.getUserById(userId, token); // Pass userId to getUserById
-      const { name, email, role, address } = response.ourUsers;
+      const { name, email, role, address } = response.ourUser;
       setUserData({ name, email, role, address });
     } catch (error) {
       console.error('Error fetching user data:', error);
@@ -41,8 +39,8 @@ function UpdateUser() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const confirmDelete = window.confirm('Are you sure you want to update this user?');
-      if (confirmDelete) {
+      const confirmUpdate = window.confirm('Are you sure you want to update this user?');
+      if (confirmUpdate) {
         const token = localStorage.getItem('token');
         const res = await UserService.updateUser(userId, userData, token);
         console.log(res)
@@ -55,6 +53,11 @@ function UpdateUser() {
       alert(error)
     }
   };
+
+  const handleCancel = () => {
+    navigate('/admin/user-management'); // Redirect to user management page on cancel
+  };
+
 
   return (
     <div className="auth-container">
@@ -76,7 +79,10 @@ function UpdateUser() {
           <label>Address:</label>
           <input type="text" name="address" value={userData.address} onChange={handleInputChange} />
         </div>
-        <button type="submit">Update</button>
+        <div className="button-group">
+          <button type="button" onClick={handleCancel} className="cancel-button">Cancel</button>
+          <button type="submit" className="update-button">Update</button>
+        </div>
       </form>
     </div>
   );

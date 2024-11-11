@@ -24,8 +24,7 @@ function Navbar() {
                 {!isAuthenticated && <li><Link to="/">User Service</Link></li>}
                 {isAuthenticated && <li><Link to="/profile">Profile</Link></li>}
                 {isAdmin && <li><Link to="/admin/user-management">User Management</Link></li>}
-                {isTeacher && <li><Link to="/teacher/dashboard">Teacher Dashboard</Link></li>}
-                {isStudent && <li><Link to="/student/dashboard">Student Dashboard</Link></li>}
+                {isAdmin && <li><Link to="/admin/school-management">School Management</Link></li>}
                 {isAuthenticated && <li><Link to="/" onClick={handleLogout}>Logout</Link></li>}
             </ul>
         </nav>

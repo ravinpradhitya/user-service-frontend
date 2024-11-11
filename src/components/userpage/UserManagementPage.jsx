@@ -17,19 +17,18 @@ function UserManagementPage() {
       const token = localStorage.getItem('token'); // Retrieve the token from localStorage
       const response = await UserService.getAllUsers(token);
       //   console.log(response);
-      setUsers(response.ourUserList); // Assuming the list of users is under the key 'ourUsersList'
+      setUsers(response.ourUserList); // Assuming the list of users is under the key 'ourUserList'
     } catch (error) {
       console.error('Error fetching users:', error);
     }
   };
 
-
+  
   const deleteUser = async (userId) => {
     try {
-      // Prompt for confirmation before deleting the user
       const confirmDelete = window.confirm('Are you sure you want to delete this user?');
 
-      const token = localStorage.getItem('token'); // Retrieve the token from localStorage
+      const token = localStorage.getItem('token'); 
       if (confirmDelete) {
         await UserService.deleteUser(userId, token);
         // After deleting the user, fetch the updated list of users
@@ -43,7 +42,9 @@ function UserManagementPage() {
   return (
     <div className="user-management-container">
       <h2>User Management</h2>
-      <button className='reg-button'> <Link to="/register">Add User</Link></button>
+      <button className='reg-button'> 
+        <Link to="/register">Add User</Link>
+      </button>
       <table>
         <thead>
           <tr>
@@ -65,10 +66,8 @@ function UserManagementPage() {
               <td>{user.role}</td>
               <td>
                 <button className='delete-button' onClick={() => deleteUser(user.id)}>Delete</button>
-                <button><Link to={`/update-user/${user.id}`}>
-                  Update
-                </Link>
-                </button>
+                <button><Link to={`/update-user/${user.id}`}>Update</Link></button>
+                
               </td>
             </tr>
           ))}

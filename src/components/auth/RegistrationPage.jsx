@@ -1,18 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import UserService from '../service/UserService';
 import { useNavigate } from 'react-router-dom';
 
 function RegistrationPage() {
     const navigate = useNavigate();
-
+    const [schools, setSchools] = useState([]);
     const [formData, setFormData] = useState({
         id: '',
         name: '',
         email: '',
         password: '',
         role: '',
-        address: ''
+        address: '',
+        schoolId: ''
     });
+
+    useEffect(() => {
+        fetchSchools();
+    }, []);
+
+    const fetchSchools = async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await UserService.getAllSchools(token);
+            console.log('Fetched schools:', response);
+
+            setSchools(Array.isArray(response) ? response : response.schools || []);
+        } catch (error) {
+            console.error('Error fetching schools:', error);
+        }
+    };
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -22,34 +39,25 @@ function RegistrationPage() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Call the register method from UserService
-
             const token = localStorage.getItem('token');
             await UserService.register(formData, token);
-
-            // Clear the form fields after successful registration
-            setFormData({
-                id: '',
-                name: '',
-                email: '',
-                password: '',
-                role: '',
-                address: ''
-            });
             alert('User registered successfully');
             navigate('/admin/user-management');
-
         } catch (error) {
             console.error('Error registering user:', error);
             alert('An error occurred while registering user');
         }
     };
 
+    const handleCancel = () => {
+        navigate('/admin/user-management');
+    };
+
     return (
         <div className="auth-container">
             <h2>Registration</h2>
             <form onSubmit={handleSubmit}>
-            <   div className="form-group">
+                <div className="form-group">
                     <label>ID:</label>
                     <input type="text" name="id" value={formData.id} onChange={handleInputChange} placeholder="Enter NISN/NIP" required />
                 </div>
@@ -73,7 +81,17 @@ function RegistrationPage() {
                     <label>Address:</label>
                     <input type="text" name="address" value={formData.address} onChange={handleInputChange} placeholder="Enter address" required />
                 </div>
-                <button type="submit">Register</button>
+                <div className="form-group">
+                    <label>School:</label>
+                    <select name="schoolId" value={formData.schoolId} onChange={handleInputChange} required>
+                        <option value="">Select School</option>
+                        {schools.map(school => (
+                            <option key={school.id} value={school.id}>{school.name}</option>
+                        ))}
+                    </select>
+                </div>
+                <button type="button" onClick={handleCancel} className="cancel-button">Cancel</button>
+                <button type="submit" className="register-button">Register</button>
             </form>
         </div>
     );
