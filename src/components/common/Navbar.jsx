@@ -21,7 +21,7 @@ function Navbar() {
     return (
         <nav>
             <ul>
-                {!isAuthenticated && <li><Link to="/">User Service</Link></li>}
+                {!isAuthenticated && <li><Link to="/">English Learning App</Link></li>}
                 {isAuthenticated && <li><Link to="/profile">Profile</Link></li>}
                 {isAdmin && <li><Link to="/admin/user-management">User Management</Link></li>}
                 {isAdmin && <li><Link to="/admin/school-management">School Management</Link></li>}
